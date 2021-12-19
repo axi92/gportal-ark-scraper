@@ -39,6 +39,7 @@ Event.on('get-server-infos', async (serverIds) => {
       index++;
       if (serverIds.length <= index) {
         // console.log(serverDataArray);
+        writeStatusBotConfigFile(serverDataArray);
       }
     })
   })
@@ -92,6 +93,20 @@ function extractServerName(fullname) {
   return fullname.split(':')[1].split('[')[0].trim().replace(/ /g, '');
 }
 
+function writeStatusBotConfigFile(data){
+  let config = [];
+  data.forEach((element) => {
+    let node = {};
+    node.name = element.name;
+    node.ip = element.ipAddress;
+    node.rconport = element.port;
+    config.push(node);
+  });
+  let content = {};
+  content.server = config;
+  writeConfig('status_bot_config.json', JSON.stringify(content, null, 2));
+}
+
 function writeSearchConfigFile(data) {
   let content = '#!/bin/bash\n\
 declare -a server_name\n\
@@ -132,7 +147,11 @@ export server_name=(\n';
   });
   content = content + ')';
 
-  fs.writeFile('search_config.sh', content, function (err) {
+  writeConfig('search_config.sh', content);
+}
+
+function writeConfig(filename, content){
+  fs.writeFile(filename, content, function (err) {
     if (err) return console.log(err);
   });
 }
