@@ -11,7 +11,7 @@ const options = got_options;
 
 // Note that `options` is a plain object, therefore it needs to be passed as the second argument.
 (async () => {
-  let body = await got.get('https://www.g-portal.com/de/serviceIds', options).json();
+  let body = await got.get('https://www.g-portal.com/eur/serviceIds', options).json();
   Event.emit('make-server-array', body);
 })().catch(e => {
   console.log(e.code); // Deal with the fact the chain failed
